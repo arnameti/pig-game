@@ -21,6 +21,11 @@ scores = [0, 0];
 currentScore = 0;
 activePlayer = 0;
 
+const switchPlayer = function () {
+  activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+  document.querySelector('.player--0').classList.toggle('player--active');
+  document.querySelector('.player--1').classList.toggle('player--active');
+} 
 
 btnRoll.addEventListener('click', function () {
   const dice = Math.floor(Math.random() * 6) + 1;
@@ -35,7 +40,7 @@ btnRoll.addEventListener('click', function () {
       : (current1El.textContent = currentScore);
 
   } else {
-    activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+    switchPlayer();
     
     currentScore = 0;
     current0El.textContent = currentScore;
@@ -44,4 +49,20 @@ btnRoll.addEventListener('click', function () {
 
 });
 
+btnHold.addEventListener('click', function() {
+  if (activePlayer === 0) {
+    scores[0] += currentScore;
+    score0El.textContent = scores[0];
+    currentScore = 0;
+    current0El.textContent = currentScore
+    switchPlayer();
+
+  } else {
+    scores[1] += currentScore;
+    score1El.textContent = scores[1];
+    currentScore = 0;
+    current1El.textContent = currentScore
+    switchPlayer();
+  }
+})
 
