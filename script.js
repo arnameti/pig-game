@@ -27,6 +27,20 @@ btnRoll.addEventListener('click', function () {
 
   diceEl.src = `dice-${dice}.png`;
 
+  currentScore += dice;
+
+  if (dice !== 1) {
+    activePlayer === 0
+      ? (current0El.textContent = currentScore)
+      : (current1El.textContent = currentScore);
+
+  } else {
+    activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+    
+    currentScore = 0;
+    current0El.textContent = currentScore;
+    current1El.textContent = currentScore;
+  }
 
 });
 
