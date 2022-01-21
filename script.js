@@ -20,49 +20,66 @@ let scores, currentScore, activePlayer, playing;
 scores = [0, 0];
 currentScore = 0;
 activePlayer = 0;
+playing = true;
+
+
+const showCurrentScore = currentScore => document.getElementById(`current--${activePlayer}`).textContent = currentScore;
+const showAndSetCurrentScoreTo0 = currentScore => document.getElementById(`current--${activePlayer}`).textContent = currentScore;
+const showScore = score => document.getElementById(`score--${activePlayer}`).textContent =
+score;
 
 const switchPlayer = function () {
-  activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
-  document.querySelector('.player--0').classList.toggle('player--active');
-  document.querySelector('.player--1').classList.toggle('player--active');
-} 
+  currentScore = 0;
+  showAndSetCurrentScoreTo0(currentScore);
+  activePlayer = activePlayer === 0 ? 1 : 0;
+  player0El.classList.toggle('player--active');
+  player1El.classList.toggle('player--active');
+  
+};
+
+diceEl.classList.add('hidden');
+
+
 
 btnRoll.addEventListener('click', function () {
-  const dice = Math.floor(Math.random() * 6) + 1;
+  if (playing) {
+    const dice = Math.floor(Math.random() * 6) + 1;
 
-  diceEl.src = `dice-${dice}.png`;
-
-  currentScore += dice;
-
-  if (dice !== 1) {
-    activePlayer === 0
-      ? (current0El.textContent = currentScore)
-      : (current1El.textContent = currentScore);
-
-  } else {
-    switchPlayer();
-    
-    currentScore = 0;
-    current0El.textContent = currentScore;
-    current1El.textContent = currentScore;
+    diceEl.classList.remove('hidden');
+    diceEl.src = `dice-${dice}.png`;
+   
+    if (dice !== 1) {
+      currentScore += dice;
+      showCurrentScore(currentScore)
+      
+    } else {
+      switchPlayer();
+    }
   }
-
 });
 
-btnHold.addEventListener('click', function() {
-  if (activePlayer === 0) {
-    scores[0] += currentScore;
-    score0El.textContent = scores[0];
-    currentScore = 0;
-    current0El.textContent = currentScore
-    switchPlayer();
 
-  } else {
-    scores[1] += currentScore;
-    score1El.textContent = scores[1];
-    currentScore = 0;
-    current1El.textContent = currentScore
-    switchPlayer();
+btnHold.addEventListener('click', function() {
+  if (playing) {
+    scores[activePlayer] += currentScore;
+    showScore(scores[activePlayer]);
+
+    if(scores[activePlayer] >= 20) {
+      playing = false;
+      diceEl.classList.add('hidden');
+
+      document
+      .querySelector(`.player--${activePlayer}`)
+      .classList.add('player--winner');
+    document
+      .querySelector(`.player--${activePlayer}`)
+      .classList.remove('player--active');
+
+    } else {
+      switchPlayer();
+    }
+
   }
 })
+
 
